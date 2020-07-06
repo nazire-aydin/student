@@ -1,4 +1,4 @@
-package com.nazire.Student;
+package uk.co.nazire;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
