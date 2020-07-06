@@ -17,21 +17,23 @@ import uk.co.nazire.service.StudentService;
 @RequestMapping("v1/student")
 public class StudentController {
 
-	private  StudentService studentService;
+	private StudentService studentService;
 	
 	//create field constructor
 	@Autowired
 	public StudentController(StudentService studentService) {
 		this.studentService = studentService;
 	}
-	//create student getList
 	
+	//Get Student List
 	@GetMapping
 	@ResponseStatus(HttpStatus.OK)
 	public List<Student> getStudentList(){
 		return studentService.getStudentList();
 	}
-	@GetMapping
+
+	//Get Sudent
+	@GetMapping("/{id}")
 	@ResponseStatus(HttpStatus.OK)
 	public Student getStudent(@PathVariable Long id) {
 		return studentService.getId(id);
