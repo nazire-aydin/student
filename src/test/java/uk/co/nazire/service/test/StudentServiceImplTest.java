@@ -10,6 +10,7 @@ import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.junit.MockitoJUnitRunner;
 
+import uk.co.nazire.exception.DataAlreadyExistException;
 import uk.co.nazire.exception.DataNotFoundException;
 import uk.co.nazire.model.Student;
 import uk.co.nazire.service.StudentServiceImpl;
@@ -36,7 +37,7 @@ public class StudentServiceImplTest {
 		//is there any specific id
 		Student expectedStudent = StudentServiceImpl.STUDENT_DATA.get(0);
 		
-		Student student = studentService.getId(expectedStudent.getId());
+		Student student = studentService.getStudent(expectedStudent.getId());
 		
 		assertThat(student).isNotNull();
 		assertThat(student).isEqualTo(expectedStudent);
@@ -47,7 +48,50 @@ public class StudentServiceImplTest {
 	public void ifStudentNotFound_thenThrowException() {
 		Student unknown = UNKNOWN_DATA;
 		
-		studentService.getId(unknown.getId());
+		studentService.getStudent(unknown.getId());
+		
+		
+	}
+	@Test
+	public void createStudent_shouldreturnCreateData() {
+		
+		//Arrange
+		Student expectedStudent = new Student("esra","basoglu",19,"Science");
+		
+		 //act
+		Student createStudent = studentService.createStudent(expectedStudent);
+		
+		//Assert
+		assertThat(createStudent).isNotNull();
+		assertThat(createStudent.getId()).isNotNull();
+		assertThat(createStudent).isNotEqualTo(expectedStudent);
+	}
+	
+	@Test(expected = DataAlreadyExistException.class)
+	public void createStudent_whenStudentAlreadyExist_thtowException() {
+		 //Arrange
+		Student expectedStudent = studentService.STUDENT_DATA.get(0);
+		
+		//Act
+		studentService.createStudent(expectedStudent);
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
 		
 		
 	}

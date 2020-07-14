@@ -33,20 +33,24 @@ public class StudentTest {
 	public void getterTest() {
 		Student student = new Student("recep","solmaz",15,"PE");
 		
-		assertEquals("recep",student.getName());
-		assertEquals("solmaz",student.getSurName());
-		
-		
-		}
+		assertEquals("recep", student.getName());
+		assertEquals("solmaz", student.getSurName());
+		assertEquals(15, student.getAge());
+		assertEquals("PE", student.getCourses());
+	}
 	
 	@Test
 	public void setterTest() {
-		Student student = new Student("recep","solmaz",15,"PE");
-		student.setName("aliosman");
+		Student student = new Student();
+		student.setName("Recep");
 		student.setSurName("Solmaz");
+		student.setAge(15);
+		student.setCourses("Math");
 		
 		assertEquals("Recep", student.getName());
-		assertEquals("solmaz", student.getSurName());
+		assertEquals("Solmaz", student.getSurName());
+		assertEquals(15, student.getAge());
+		assertEquals("Math", student.getCourses());
 	}
 	}
 
