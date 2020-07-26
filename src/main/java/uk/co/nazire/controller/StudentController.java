@@ -7,6 +7,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -40,11 +41,19 @@ public class StudentController {
 	public Student getStudent(@PathVariable Long id) {
 		return studentService.getStudent(id);
 	}
+	
 	//create studentList
 	@PostMapping
 	@ResponseStatus(HttpStatus.CREATED)
 	public Student createStudent(@RequestBody Student student) {
 		return studentService.createStudent(student);
+	}
+	
+	//Update Student
+	@PutMapping("/{id}")
+	@ResponseStatus(HttpStatus.OK)
+	public Student updateStudent(@PathVariable long id, @RequestBody Student student) {
+		return studentService.updateStudent(id, student);
 	}
 }
 	
