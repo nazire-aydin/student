@@ -31,11 +31,12 @@ public class StudentTest {
 
 	@Test
 	public void getterTest() {
-		Student student = new Student("recep", "solmaz", 15, "PE");
-
+		Student student = new Student("recep","solmaz",15,"PE");
+		
 		assertEquals("recep", student.getName());
 		assertEquals("solmaz", student.getSurName());
-
+		assertEquals(15, student.getAge());
+		assertEquals("PE", student.getCourses());
 	}
 
 	@Test

@@ -7,7 +7,9 @@ import uk.co.nazire.model.Student;
 public interface StudentService {
 
 	List<Student> getStudentList();
-
-	Student getId(Long id);
-
+	
+	Student getStudent(Long id);
+	
+	Student createStudent(Student student);
+	
 }

@@ -1,9 +1,12 @@
 package uk.co.nazire.controller.test;
 
+import static org.mockito.ArgumentMatchers.any;
+import static org.hamcrest.CoreMatchers.anyOf;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -14,11 +17,19 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.http.MediaType;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.ObjectWriter;
+import com.fasterxml.jackson.databind.SerializationFeature;
+
 import uk.co.nazire.StudentApplication;
+import uk.co.nazire.exception.DataAlreadyExistException;
 import uk.co.nazire.exception.DataNotFoundException;
+import uk.co.nazire.model.Student;
 import uk.co.nazire.service.StudentService;
 import uk.co.nazire.service.StudentServiceImpl;
 
@@ -51,8 +62,7 @@ public class StudentControllerTest {
 
 	@Test
 	public void shouldReturnGetStudentSuccessfull() throws Exception {
-
-		when(studentService.getId(2L)).thenReturn(StudentServiceImpl.STUDENT_DATA.get(1));
+		when(studentService.getStudent(2L)).thenReturn(StudentServiceImpl.STUDENT_DATA.get(1));
 
 		this.mockMvc.perform(get("/v1/student/2")).andDo(print()).andExpect(status().isOk())
 				.andExpect(jsonPath("id").value(StudentServiceImpl.STUDENT_DATA.get(1).getId()))
@@ -61,18 +71,58 @@ public class StudentControllerTest {
 				.andExpect(jsonPath("age").value(StudentServiceImpl.STUDENT_DATA.get(1).getAge()))
 				.andExpect(jsonPath("courses").value(StudentServiceImpl.STUDENT_DATA.get(1).getCourses()));
 
-		verify(studentService, times(1)).getId(2L);
+		verify(studentService, times(1)).getStudent(2L);
+
 	}
 
 	@Test
 	public void shouldReturnDataNotFoundExceptionFromGetStudent() throws Exception {
-		when(studentService.getId(100L)).thenThrow(DataNotFoundException.class);
+		when(studentService.getStudent(100L)).thenThrow(DataNotFoundException.class);
 
 		this.mockMvc.perform(get("/v1/student/100")).andDo(print()).andExpect(status().isNotFound())
 				.andExpect(jsonPath("details").value("uri=/v1/student/100"));
 
-		verify(studentService, times(1)).getId(100L);
+		verify(studentService, times(1)).getStudent(100L);
 
+	}
+
+	@Test
+	public void shouldCreateStudent() throws Exception {
+		Student newlyCreatedStudent = new Student("Shyamali", "Saxena", 21, "Science");
+		String requestJson = convertObjectToJsonString(newlyCreatedStudent);
+
+		// Arrange
+		when(studentService.createStudent(any())).thenReturn(newlyCreatedStudent);
+
+		// Act
+		this.mockMvc.perform(post("/v1/student").contentType(MediaType.APPLICATION_JSON_VALUE).content(requestJson))
+				.andDo(print()).andExpect(status().isCreated()).andExpect(jsonPath("id").exists())
+				.andExpect(jsonPath("name").value(newlyCreatedStudent.getName()))
+				.andExpect(jsonPath("surName").value(newlyCreatedStudent.getSurName()));
+		// Assert
+		verify(studentService, times(1)).createStudent(any());
+
+	}
+
+	@Test
+	public void shouldReturn409ifAlreadExist() throws Exception {
+
+		Student alreadyExistingStudentList = StudentServiceImpl.STUDENT_DATA.get(0);
+		String requestJson = convertObjectToJsonString(alreadyExistingStudentList);
+
+		when(studentService.createStudent(any())).thenThrow(DataAlreadyExistException.class);
+
+		this.mockMvc.perform(post("/v1/student").contentType(MediaType.APPLICATION_JSON_VALUE).content(requestJson))
+				.andDo(print()).andExpect(status().isConflict());
+		verify(studentService, times(1)).createStudent(any());
+	}
+
+	private String convertObjectToJsonString(Object object) throws JsonProcessingException{
+		  ObjectMapper mapper = new ObjectMapper();
+	        mapper.configure(SerializationFeature.WRAP_ROOT_VALUE, false);
+	        ObjectWriter ow = mapper.writer().withDefaultPrettyPrinter();
+	        String requestJson = ow.writeValueAsString(object);
+	        return requestJson;
 	}
 
 }

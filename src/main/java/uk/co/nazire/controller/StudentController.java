@@ -6,6 +6,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
@@ -32,10 +34,16 @@ public class StudentController {
 		return studentService.getStudentList();
 	}
 
-	// Get Sudent
+	//Get Student
 	@GetMapping("/{id}")
 	@ResponseStatus(HttpStatus.OK)
 	public Student getStudent(@PathVariable Long id) {
-		return studentService.getId(id);
+		return studentService.getStudent(id);
+	}
+	//create studentList
+	@PostMapping
+	@ResponseStatus(HttpStatus.CREATED)
+	public Student createStudent(@RequestBody Student student) {
+		return studentService.createStudent(student);
 	}
 }
