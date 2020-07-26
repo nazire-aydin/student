@@ -1,0 +1,53 @@
+package uk.co.nazire.model.test;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+
+import org.junit.jupiter.api.Test;
+
+import uk.co.nazire.model.Student;
+
+//buna neden runWith koymadik askim?
+public class StudentTest {
+	
+	@Test
+	public void shouldDefineGetList() {
+		Student student = new Student("beyza","fidanel",17,"math");
+		
+		assertNotNull(student.getId());
+		
+	}
+	
+	@Test
+	public void dataShouldBeDifferent() {
+		//to check hashcodes are equals 
+		Student student = new Student("beyza","fidanel",17,"math");
+		Student student1 = new Student("azra","solmaz",20,"science");
+		
+		//if it is not equals code is correct
+		assertNotEquals(student ,student1);
+	}
+	
+	@Test
+	public void getterTest() {
+		Student student = new Student("recep","solmaz",15,"PE");
+		
+		assertEquals("recep",student.getName());
+		assertEquals("solmaz",student.getSurName());
+		
+		
+		}
+	
+	@Test
+	public void setterTest() {
+		Student student = new Student("recep","solmaz",15,"PE");
+		student.setName("aliosman");
+		student.setSurName("Solmaz");
+		
+		assertEquals("Recep", student.getName());
+		assertEquals("solmaz", student.getSurName());
+	}
+	}
+
+
