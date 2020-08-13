@@ -2,6 +2,7 @@ package uk.co.nazire.service.test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.util.List;
 
@@ -14,6 +15,8 @@ import uk.co.nazire.exception.DataAlreadyExistException;
 import uk.co.nazire.exception.DataNotFoundException;
 import uk.co.nazire.model.Student;
 import uk.co.nazire.service.StudentServiceImpl;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 
 @RunWith(MockitoJUnitRunner.class)
 public class StudentServiceImplTest {
@@ -68,12 +71,37 @@ public class StudentServiceImplTest {
 	}
 	
 	@Test(expected = DataAlreadyExistException.class)
-	public void createStudent_whenStudentAlreadyExist_thtowException() {
+	public void createStudent_whenStudentAlreadyExist_throwException() {
 		 //Arrange
-		Student expectedStudent = studentService.STUDENT_DATA.get(0);
+		Student expectedStudent = StudentServiceImpl.STUDENT_DATA.get(0);
 		
 		//Act
 		studentService.createStudent(expectedStudent);
 	}
+	
+	@Test
+	public void updateStudent_shouldReturnUpdateData() {
+		//Arrange
+		Student currentStudent = StudentServiceImpl.STUDENT_DATA.get(0);
+		Student updateStudent = new Student("Cevdet", "Aydin", 10, "Football");
+		
+		//Act
+		currentStudent = studentService.updateStudent(currentStudent.getId(), updateStudent);
+		
+		//Verify
+		assertThat(currentStudent).isNotNull();
+		assertEquals(currentStudent.getName(), updateStudent.getName());
+		assertEquals(currentStudent.getSurName(), updateStudent.getSurName());
+		assertEquals(currentStudent.getAge(), updateStudent.getAge());
+		assertEquals(currentStudent.getCourses(), updateStudent.getCourses());
+	}
 
+	@Test(expected = DataNotFoundException.class)
+	public void updateStudent_DataNotFoundException() {
+		//Arrange
+		Student updateStudent = new Student("Talat", "Aydin", 15, "Math");
+		
+		//Act
+		studentService.updateStudent(34004L, updateStudent);
+	}
 }
