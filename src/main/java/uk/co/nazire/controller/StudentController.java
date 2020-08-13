@@ -21,17 +21,17 @@ import uk.co.nazire.service.StudentService;
 public class StudentController {
 
 	private StudentService studentService;
-	
-	//create field constructor
+
+	// create field constructor
 	@Autowired
 	public StudentController(StudentService studentService) {
 		this.studentService = studentService;
 	}
-	
-	//Get Student List
+
+	// Get Student List
 	@GetMapping
 	@ResponseStatus(HttpStatus.OK)
-	public List<Student> getStudentList(){
+	public List<Student> getStudentList() {
 		return studentService.getStudentList();
 	}
 
@@ -56,4 +56,3 @@ public class StudentController {
 		return studentService.updateStudent(id, student);
 	}
 }
-	

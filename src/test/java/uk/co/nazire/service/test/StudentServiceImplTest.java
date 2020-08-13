@@ -20,41 +20,41 @@ import static org.mockito.Mockito.verify;
 
 @RunWith(MockitoJUnitRunner.class)
 public class StudentServiceImplTest {
-	
+
 	@InjectMocks
 	private StudentServiceImpl studentService;
-	
-	public static final Student UNKNOWN_DATA = new Student("UNKNOWN", "UNKNOWN", 0 , "UNKNOWN");
-	
+
+	public static final Student UNKNOWN_DATA = new Student("UNKNOWN", "UNKNOWN", 0, "UNKNOWN");
+
 	@Test
 	public void findGetStudentList_shouldReturnData() {
 		List<Student> expectedStudentList = StudentServiceImpl.STUDENT_DATA;
-		
-		//is there student list
+
+		// is there student list
 		List<Student> studentList = studentService.getStudentList();
 		assertThat(studentList).isNotNull();
 		assertThat(studentList).isEqualTo(expectedStudentList);
 	}
+
 	@Test
 	public void findStudent_shouldReturnData() {
-		//is there any specific id
+		// is there any specific id
 		Student expectedStudent = StudentServiceImpl.STUDENT_DATA.get(0);
-		
+
 		Student student = studentService.getStudent(expectedStudent.getId());
-		
+
 		assertThat(student).isNotNull();
 		assertThat(student).isEqualTo(expectedStudent);
-		
+
 	}
-	
-	@Test(expected=DataNotFoundException.class)
-	public void findStudent_DataNotFoundException() {
+
+	@Test(expected = DataNotFoundException.class)
+	public void ifStudentNotFound_thenThrowException() {
 		Student unknown = UNKNOWN_DATA;
 		
 		studentService.getStudent(unknown.getId());
-		
-		
 	}
+	
 	@Test
 	public void createStudent_shouldreturnCreateData() {
 		

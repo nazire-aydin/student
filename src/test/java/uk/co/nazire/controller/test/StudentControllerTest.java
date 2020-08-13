@@ -49,7 +49,6 @@ public class StudentControllerTest {
 		// Arrange
 		when(studentService.getStudentList()).thenReturn(StudentServiceImpl.STUDENT_DATA);
 		// Act
-
 		this.mockMvc.perform(get("/v1/student")).andDo(print()).andExpect(status().isOk())
 				.andExpect(jsonPath("[0].id").value(StudentServiceImpl.STUDENT_DATA.get(0).getId()))
 				.andExpect(jsonPath("[0].name").value(StudentServiceImpl.STUDENT_DATA.get(0).getName()))
@@ -63,7 +62,6 @@ public class StudentControllerTest {
 
 	@Test
 	public void shouldReturnGetStudentSuccessfull() throws Exception {
-
 		when(studentService.getStudent(2L)).thenReturn(StudentServiceImpl.STUDENT_DATA.get(1));
 
 		this.mockMvc.perform(get("/v1/student/2")).andDo(print()).andExpect(status().isOk())
@@ -74,6 +72,7 @@ public class StudentControllerTest {
 				.andExpect(jsonPath("courses").value(StudentServiceImpl.STUDENT_DATA.get(1).getCourses()));
 
 		verify(studentService, times(1)).getStudent(2L);
+
 	}
 
 	@Test

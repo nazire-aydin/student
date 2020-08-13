@@ -10,25 +10,25 @@ import uk.co.nazire.model.Student;
 
 //buna neden runWith koymadik askim?
 public class StudentTest {
-	
+
 	@Test
 	public void shouldDefineGetList() {
-		Student student = new Student("beyza","fidanel",17,"math");
-		
+		Student student = new Student("beyza", "fidanel", 17, "math");
+
 		assertNotNull(student.getId());
-		
+
 	}
-	
+
 	@Test
 	public void dataShouldBeDifferent() {
-		//to check hashcodes are equals 
-		Student student = new Student("beyza","fidanel",17,"math");
-		Student student1 = new Student("azra","solmaz",20,"science");
-		
-		//if it is not equals code is correct
-		assertNotEquals(student ,student1);
+		// to check hashcodes are equals
+		Student student = new Student("beyza", "fidanel", 17, "math");
+		Student student1 = new Student("azra", "solmaz", 20, "science");
+
+		// if it is not equals code is correct
+		assertNotEquals(student, student1);
 	}
-	
+
 	@Test
 	public void getterTest() {
 		Student student = new Student("recep","solmaz",15,"PE");
@@ -38,7 +38,7 @@ public class StudentTest {
 		assertEquals(15, student.getAge());
 		assertEquals("PE", student.getCourses());
 	}
-	
+
 	@Test
 	public void setterTest() {
 		Student student = new Student();
@@ -52,6 +52,4 @@ public class StudentTest {
 		assertEquals(15, student.getAge());
 		assertEquals("Math", student.getCourses());
 	}
-	}
-
-
+}
