@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import uk.co.nazire.exception.DataAlreadyExistException;
 import uk.co.nazire.exception.DataNotFoundException;
 import uk.co.nazire.model.Student;
+import uk.co.nazire.model.StudentEditInput;
 
 @Service
 public class StudentServiceImpl implements StudentService {
@@ -54,6 +55,22 @@ public class StudentServiceImpl implements StudentService {
 
 		return updateStudent;
 
+	}
+
+	@Override
+	public Student editStudent(Long id, StudentEditInput input) {
+		
+		Student updateStudent = STUDENT_DATA.stream()
+				 .filter(s -> s.getId().equals(id))
+				 .findFirst()
+				 .orElseThrow(()-> new DataNotFoundException(id + "not found"));
+		updateStudent.setName(input.getName());
+		updateStudent.setSurName(input.getSurName());
+		
+		STUDENT_DATA.set(STUDENT_DATA.indexOf(updateStudent), updateStudent);
+		
+		
+		return updateStudent;
 	}
 
 }

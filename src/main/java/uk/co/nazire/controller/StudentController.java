@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import uk.co.nazire.model.Student;
+import uk.co.nazire.model.StudentEditInput;
 import uk.co.nazire.service.StudentService;
 
 @RestController
@@ -52,7 +54,15 @@ public class StudentController {
 	//Update Student
 	@PutMapping("/{id}")
 	@ResponseStatus(HttpStatus.OK)
-	public Student updateStudent(@PathVariable long id, @RequestBody Student student) {
+	public Student updateStudent(@PathVariable Long id, @RequestBody Student student) {
 		return studentService.updateStudent(id, student);
+	}
+	
+	// update editInputStudent
+	
+	@PatchMapping("/{id}")
+	@ResponseStatus(HttpStatus.OK)
+	public Student updateStudentEditInput(@PathVariable Long id, @RequestBody StudentEditInput input ) {
+		return studentService.editStudent(id,input);
 	}
 }

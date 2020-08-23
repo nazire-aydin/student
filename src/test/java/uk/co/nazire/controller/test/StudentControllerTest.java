@@ -5,6 +5,7 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -30,6 +31,7 @@ import uk.co.nazire.StudentApplication;
 import uk.co.nazire.exception.DataAlreadyExistException;
 import uk.co.nazire.exception.DataNotFoundException;
 import uk.co.nazire.model.Student;
+import uk.co.nazire.model.StudentEditInput;
 import uk.co.nazire.service.StudentService;
 import uk.co.nazire.service.StudentServiceImpl;
 
@@ -140,7 +142,7 @@ public class StudentControllerTest {
 	}
 
 	@Test
-	public void shouldReturn404DataNotFound() throws Exception {
+	public void shouldReturnUpdateStudent404DataNotFound() throws Exception {
 		Student newlyUpdateStudent = new Student("Didem", "Fidanel", 17, "Math");
 		String requestJson = convertObjectToJsonString(newlyUpdateStudent);
 
@@ -149,7 +151,42 @@ public class StudentControllerTest {
 		this.mockMvc.perform(put("/v1/student/20").contentType(MediaType.APPLICATION_JSON_VALUE).content(requestJson))
 				.andDo(print()).andExpect(status().isNotFound());
 		verify(studentService, times(1)).updateStudent(any(), any());
-
 	}
 
+	@Test   
+	public void shouldReturnUpdateEdit() throws Exception {
+		//Given	
+		StudentEditInput newlyUpdateEdit = new StudentEditInput("memet" , "solmaz");
+		String requestJson = convertObjectToJsonString(newlyUpdateEdit);
+	
+		//Arrange
+		when(studentService.editStudent(any(), any())).thenReturn(StudentServiceImpl.STUDENT_DATA.get(0));
+		
+		//Act
+		this.mockMvc.perform(patch("/v1/student/1").contentType(MediaType.APPLICATION_JSON_VALUE).content(requestJson))
+					.andDo(print()).andExpect(status().isOk())
+					.andExpect(jsonPath("id").exists())
+					.andExpect(jsonPath("name").value(StudentServiceImpl.STUDENT_DATA.get(0).getName()))
+					.andExpect(jsonPath("surName").value(StudentServiceImpl.STUDENT_DATA.get(0).getSurName()));
+		
+		//Assert
+		verify(studentService, times(1)).editStudent(any(), any());
+		
+	}	
+	
+	@Test
+	public void shouldReturnEditStudent404DataNotFound() throws Exception {
+		//Given
+		Student newlyUpdateStudent = new Student("Didem", "Fidanel", 17, "Math");
+		String requestJson = convertObjectToJsonString(newlyUpdateStudent);
+		//Arrange
+		when(studentService.editStudent(any(), any())).thenThrow(new DataNotFoundException("20 Not Found"));
+		
+		//Act
+		this.mockMvc.perform(patch("/v1/student/20").contentType(MediaType.APPLICATION_JSON_VALUE).content(requestJson))
+				.andDo(print()).andExpect(status().isNotFound());
+		//Assert
+		verify(studentService, times(1)).editStudent(any(), any());
+	}
+	
 }
