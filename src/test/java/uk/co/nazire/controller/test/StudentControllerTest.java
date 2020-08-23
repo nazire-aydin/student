@@ -188,5 +188,4 @@ public class StudentControllerTest {
 		//Assert
 		verify(studentService, times(1)).editStudent(any(), any());
 	}
-	
 }
