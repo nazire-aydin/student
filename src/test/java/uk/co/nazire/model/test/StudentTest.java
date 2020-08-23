@@ -8,7 +8,6 @@ import org.junit.jupiter.api.Test;
 
 import uk.co.nazire.model.Student;
 
-//buna neden runWith koymadik askim?
 public class StudentTest {
 
 	@Test
