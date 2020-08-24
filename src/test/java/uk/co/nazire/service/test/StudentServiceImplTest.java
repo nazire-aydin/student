@@ -1,8 +1,9 @@
 package uk.co.nazire.service.test;
 
+
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
-import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.util.List;
 
@@ -14,6 +15,7 @@ import org.mockito.junit.MockitoJUnitRunner;
 import uk.co.nazire.exception.DataAlreadyExistException;
 import uk.co.nazire.exception.DataNotFoundException;
 import uk.co.nazire.model.Student;
+import uk.co.nazire.model.StudentEditInput;
 import uk.co.nazire.service.StudentServiceImpl;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -104,4 +106,32 @@ public class StudentServiceImplTest {
 		//Act
 		studentService.updateStudent(34004L, updateStudent);
 	}
+	
+	@Test 
+	public void studentEditInput_shouldReturnStudentEditInput() {
+		//Arrange
+		Student currentStudent = StudentServiceImpl.STUDENT_DATA.get(0);
+		StudentEditInput patchStudent = new StudentEditInput("Riza","Aydin");
+		
+		//Act
+		currentStudent = studentService.editStudent(currentStudent.getId(), patchStudent);//talata sor neden eklemiyor
+		
+		//verify
+		assertThat(currentStudent).isNotNull();
+		assertEquals(currentStudent.getName(), patchStudent.getName());
+		assertEquals(currentStudent.getSurName(), patchStudent.getSurName());
+		
+	}
+	
+	@Test(expected = DataNotFoundException.class)
+	public void studentEditInput_DataNotFoundException() {
+		//Arrange
+		StudentEditInput editStudent =  new StudentEditInput("Riza" , "Aydin");
+		
+		//Act
+		studentService.editStudent(20L, editStudent);
+		
+	}
+	
+	
 }
