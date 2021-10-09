@@ -3,6 +3,7 @@ package uk.co.nazire.controller;
 import java.util.Date;
 
 import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -23,5 +24,16 @@ public class GlobalExceptionHandling {
 
 		return errorDetails;
 	}
+	
+	@ExceptionHandler(MethodArgumentNotValidException.class)
+	@ResponseStatus(HttpStatus.BAD_REQUEST)
+	public ErrorDetails methodArgumentNotValidExceptionHandler(final MethodArgumentNotValidException ex, final WebRequest request) {
+
+		ErrorDetails errorDetails = new ErrorDetails(ex.getMessage(), request.getDescription(false), new Date(),
+				HttpStatus.BAD_REQUEST.value());
+
+		return errorDetails;
+	}
+	
 
 }

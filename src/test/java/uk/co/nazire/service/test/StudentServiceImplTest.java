@@ -4,6 +4,8 @@ package uk.co.nazire.service.test;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 import java.util.List;
 
@@ -17,6 +19,8 @@ import uk.co.nazire.exception.DataNotFoundException;
 import uk.co.nazire.model.Student;
 import uk.co.nazire.model.StudentEditInput;
 import uk.co.nazire.service.StudentServiceImpl;
+
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
@@ -133,5 +137,23 @@ public class StudentServiceImplTest {
 		
 	}
 	
+	@Test
+	public void deleteStudent_shouldReturnAnyData() {
+		Student expectedStudent = StudentServiceImpl.STUDENT_DATA.get(0);
+		
+		studentService.deleteStudent(expectedStudent.getId());
+		
+		assertNotEquals(expectedStudent, StudentServiceImpl.STUDENT_DATA.get(0));
+		
+	}
+	
+	@Test(expected = DataNotFoundException.class)
+	public void ifStudentNotFound_ThenThrowException() {
+		
+		Student unknown = UNKNOWN_DATA;
+		//test if data not found that can throw exceptıon
+		studentService.deleteStudent(unknown.getId());
+		
+	}
 	
 }

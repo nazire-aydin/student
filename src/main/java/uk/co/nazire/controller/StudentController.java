@@ -4,6 +4,8 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -47,7 +49,7 @@ public class StudentController {
 	//create studentList
 	@PostMapping
 	@ResponseStatus(HttpStatus.CREATED)
-	public Student createStudent(@RequestBody Student student) {
+	public Student createStudent(@Validated @RequestBody Student student) {
 		return studentService.createStudent(student);
 	}
 	
@@ -59,10 +61,16 @@ public class StudentController {
 	}
 	
 	// update editInputStudent
-	
 	@PatchMapping("/{id}")
 	@ResponseStatus(HttpStatus.OK)
-	public Student updateStudentEditInput(@PathVariable Long id, @RequestBody StudentEditInput input ) {
+	public Student updateStudentEditInput(@PathVariable Long id, @Validated @RequestBody StudentEditInput input ) {
 		return studentService.editStudent(id,input);
 	}
+	
+	//Delete Student
+	@DeleteMapping("/{id}")
+	@ResponseStatus(HttpStatus.NO_CONTENT)
+	public void deleteStudent(@PathVariable Long id) {
+		studentService.deleteStudent(id);
+		}
 }

@@ -1,9 +1,13 @@
 package uk.co.nazire.model;
 
+import javax.validation.constraints.NotEmpty;
+
 public class StudentEditInput {
 	
+	@NotEmpty
 	private String name;
 	
+	@NotEmpty
 	private String surName;
 	 
 	public StudentEditInput () {

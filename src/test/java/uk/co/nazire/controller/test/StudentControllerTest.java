@@ -1,9 +1,11 @@
 package uk.co.nazire.controller.test;
 
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -14,6 +16,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -116,6 +119,7 @@ public class StudentControllerTest {
 
 		this.mockMvc.perform(post("/v1/student").contentType(MediaType.APPLICATION_JSON_VALUE).content(requestJson))
 				.andDo(print()).andExpect(status().isConflict());
+		
 		verify(studentService, times(1)).createStudent(any());
 	}
 
@@ -129,6 +133,7 @@ public class StudentControllerTest {
 
 	@Test
 	public void shouldReturnUpdateStudent() throws Exception {
+		//Given
 		Student newlyUpdateStudent = new Student("Didem", "Fidanel", 17, "Math");
 		String requestJson = convertObjectToJsonString(newlyUpdateStudent);
 
@@ -187,5 +192,19 @@ public class StudentControllerTest {
 				.andDo(print()).andExpect(status().isNotFound());
 		//Assert
 		verify(studentService, times(1)).editStudent(any(), any());
+	}
+	
+	@Test
+	public void deleteStudentTest() throws Exception {
+		Long studentId = 1L;
+		
+		doNothing().when(studentService).deleteStudent(studentId);
+		//when(studentService.deleteStudent(Mockito.anyLong()));
+		
+		this.mockMvc.perform(delete("/v1/student/"+studentId))
+		 	.andDo(print())
+		 	.andExpect(status().isNoContent());
+		 	
+		 verify(studentService,times(1)).deleteStudent(studentId);	
 	}
 }

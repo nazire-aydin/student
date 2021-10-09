@@ -17,6 +17,7 @@ public class StudentServiceImpl implements StudentService {
 	public static final List<Student> STUDENT_DATA = new ArrayList<>(Arrays
 			.asList(new Student("Beyza", "Fidanel", 17, "math,science"), new Student("Azra", "Solmaz", 20, "math")));
 
+
 	@Override
 	public List<Student> getStudentList() {
 		return STUDENT_DATA;
@@ -25,7 +26,7 @@ public class StudentServiceImpl implements StudentService {
 	@Override
 	public Student getStudent(Long id) {
 		return STUDENT_DATA.stream().filter(s -> s.getId().equals(id)).findAny()
-				.orElseThrow(() -> new DataNotFoundException(id + "not found"));
+				.orElseThrow(() -> new DataNotFoundException(id + " not found"));
 	}
 
 	@Override
@@ -35,7 +36,7 @@ public class StudentServiceImpl implements StudentService {
 		STUDENT_DATA.stream().filter(
 				s -> s.getName().equalsIgnoreCase(student.getName()) && s.getSurName().equalsIgnoreCase(s.getSurName()))
 				.findAny().ifPresent(s -> {
-					throw new DataAlreadyExistException(s.getName() + " " + s.getSurName() + "already exist");
+					throw new DataAlreadyExistException(s.getName() + " " + s.getSurName() + " already exist");
 				});
 		STUDENT_DATA.add(newStudent);
 
@@ -63,7 +64,7 @@ public class StudentServiceImpl implements StudentService {
 		Student updateStudent = STUDENT_DATA.stream()
 				 .filter(s -> s.getId().equals(id))
 				 .findFirst()
-				 .orElseThrow(()-> new DataNotFoundException(id + "not found"));
+				 .orElseThrow(()-> new DataNotFoundException(id + " not found"));
 		updateStudent.setName(input.getName());
 		updateStudent.setSurName(input.getSurName());
 		
@@ -71,6 +72,19 @@ public class StudentServiceImpl implements StudentService {
 		
 		
 		return updateStudent;
+	}
+
+	@Override
+	public void deleteStudent(Long id) {
+		
+		Student student = STUDENT_DATA.stream().filter(s -> s.getId().equals(id))
+				 						.findAny()
+				 						.orElseThrow(() ->new DataNotFoundException(id + " not found"));
+		STUDENT_DATA.remove(student);
+		
+				 								
+		
+		
 	}
 
 }
